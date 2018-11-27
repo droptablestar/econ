@@ -48,7 +48,7 @@ class Crawler:
                     break
                 except HTTPError as e:
                     print('here')
-                    self.log_error('./errors.log', e)
+                    self.log('./errors.log', e)
                     self.req_sleep()
 
             text = response.read()
@@ -68,54 +68,53 @@ class Crawler:
                 try:
                     self.collection.insert_one({'url': '{}{}'.format(self.domain, r)})
                 except DuplicateKeyError as e:
-                    self.log_error('./db_errors.log', e)
+                    self.log('./db_errors.log', e)
 
             i += 25
             self.req_sleep()
 
     def crawl_single(self, name):
-        for r in self.collection.find():
-            print('{}:{}:{}'.format(name, self.collection.name, r['url']))
-            return
+        records = self.collection.find({'html': {'$exists': False}})
+        for r in records:
+            self.log('{}.log'.format(name), '{}:{}:{}'.format(name, self.collection.name, r['url']))
             while True:
                 try:
                     response = request.urlopen(r['url'])
                     self.collection.find_one_and_update({'url': r['url']}, {'$set': {'html': response.read().decode('utf-8')}})
                     break
                 except Exception as e:
-                    self.log_error('./errors_single.log', e)
+                    self.log('./errors_single.log', e)
                     self.req_sleep()
             self.req_sleep()
 
-    def log_error(self, log_name, error):
+    def log(self, log_name, error):
         with open(log_name, 'a') as f:
             f.write('{} {}\n'.format(strftime('%Y-%d-%m_%H:%M:%S', localtime()), error))
 
     def req_sleep(self):
-        timer = uniform(.75, 2.0)
-        print('sleeping for: {}s'.format(timer))
+        timer = uniform(.5, 1.0)
+        # print('sleeping for: {}s'.format(timer))
         sleep(timer)
-
-
 
 if __name__ == '__main__':
     def parse(name, i, lines):
-        start = i * 6
-        end = start + 6
+        start = i
+        end = i + 1
         for j in range(start, end):
             c = Crawler(domain='https://ustc.ac.uk/index.php', classification=lines[j])
             c.crawl_single(name)
             # print('{}:{} - [{}]'.format(j, lines[j], i))
-            if i == 5:  # 37 classifications so special case for last one
-                c = Crawler(domain='https://ustc.ac.uk/index.php', classification=lines[j+1])
-                c.crawl_single(name)
+            # if i == 5:  # 37 classifications so special case for last one
+            #     c = Crawler(domain='https://ustc.ac.uk/index.php', classification=lines[j+1])
+            #     c.crawl_single(name)
                 # print('{}:{} - [{}]'.format(j+1, lines[j+1], i))
 
     # c = Crawler('record_urls.txt', 'https://ustc.ac.uk/index.php', sys.argv[1] if len(sys.argv) > 1 else None)
     with open('classifications.txt') as f:
         lines = list(map(lambda line: line.strip(' \n'), f.readlines()))
-        for i in range(0, 6):  # create 6 threads
-            t = Thread(target=parse, kwargs={'name': 't'+str(i), 'i': i, 'lines': lines})
+        for i in range(0, 9):  # create some threads
+            # print("t = Thread(target=parse, kwargs={{'name': t+str({}), 'i': {}, 'lines': lines}})".format(i, i+28))
+            t = Thread(target=parse, kwargs={'name': 't'+str(i), 'i': i+28, 'lines': lines})
             t.start()
 
         # c = Crawler(domain='https://ustc.ac.uk/index.php', classification=lines[i])
