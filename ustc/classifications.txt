@@ -41,7 +41,7 @@ Witchcraft+and+Demonology
 [1371/1371]Agriculture
 [1262/1262]Art+and+Architecture
 [3439/3439]Astrology+and+Cosmography
-[/10119]Bibles+(including+parts)
+[10119/10119]Bibles+(including+parts)
 [1237/1237]Book+Trade
 [7653/7653]Calendars+and+Prognostications
 [22134/22134]Classical+Authors

@@ -16,6 +16,7 @@ from pymongo.errors import DuplicateKeyError
 
 class Crawler:
     def __init__(self, file_name=None, domain=None, classification=None):
+        r''
         self.file_name = file_name
         self.domain = domain
 
@@ -107,7 +108,7 @@ if __name__ == '__main__':
             # if i == 5:  # 37 classifications so special case for last one
             #     c = Crawler(domain='https://ustc.ac.uk/index.php', classification=lines[j+1])
             #     c.crawl_single(name)
-                # print('{}:{} - [{}]'.format(j+1, lines[j+1], i))
+            # print('{}:{} - [{}]'.format(j+1, lines[j+1], i))
 
     # c = Crawler('record_urls.txt', 'https://ustc.ac.uk/index.php', sys.argv[1] if len(sys.argv) > 1 else None)
     with open('classifications.txt') as f:
