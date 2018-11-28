@@ -12,14 +12,9 @@ from threading import Thread
 import sys
 
 from mongo import DB
-from pymongo.errors import DuplicateKeyError
-
+from pymongo.errors import DuplicateKeyError, WriteConcernError
 import numpy
 
-from pathos.multiprocessing import ProcessingPool as Pool
-from itertools import repeat
-# from functools import partial
-print('there')
 class Crawler:
     def __init__(self, file_name=None, domain=None, classification=None):
         r''
@@ -55,7 +50,6 @@ class Crawler:
                         self.log('./db_errors.log', e)
 
                 self.req_sleep()
-                return
 
         text = self.read_url(self.url.format(0))
         end = search(r'(Results found: )(\d+)', text)
@@ -69,19 +63,15 @@ class Crawler:
         for (i, s) in zip(range(0, thread_count), splits):
             Thread(target=crawl, kwargs={'name': 't{}'.format(i), 'page_nos': s}).start()
 
-    def crawl_single(self, name, page_nos):
-        return
+    def crawl_single(self, name):
         records = self.collection.find({'html': {'$exists': False}})
         for r in records:
             self.log('{}.log'.format(name), '{}:{}:{}'.format(name, self.collection.name, r['url']))
-            while True:
-                try:
-                    response = request.urlopen(r['url'])
-                    self.collection.find_one_and_update({'url': r['url']}, {'$set': {'html': response.read().decode('utf-8')}})
-                    break
-                except Exception as e:
-                    self.log('./errors_single.log', e)
-                    self.req_sleep()
+            text = self.read_url(r['url'])
+            try:
+                self.collection.find_one_and_update({'url': r['url']}, {'$set': {'html': text}})
+            except WriteConcernError as e:
+                    self.log('./errors_single.log', 'Could not update {} - {}'.format(r['url'], e))
             self.req_sleep()
 
     def log(self, log_name, msg):
@@ -108,21 +98,17 @@ class Crawler:
             text = text.decode('latin1')
         return text
 
-def chunks(l, n):
-    """Yield successive n-sized chunks from l."""
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
-
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         c = Crawler(domain='https://ustc.ac.uk/index.php')
         c.crawl_all()
 
-    elif len(sys.argv) == 2 and sys.argv[1] == '-c' < 1:
-        with open('classifications.txt') as f:
+    elif len(sys.argv) == 3 and sys.argv[1] == '-c':
+        
+        with open(sys.argv[2]) as f:
             lines = list(map(lambda line: line.strip(' \n'), f.readlines()))
             for i in range(0, len(lines)):  # create some threads
                 c = Crawler(domain='https://ustc.ac.uk/index.php', classification=lines[i])
-                Thread(target=c.crawl_single, kwargs={'name': 't{}'.format(i)}).start()
+                Thread(target=c.crawl_single, kwargs={'name': 't{}'.format(c.classification)}).start()
     else:
-        print('usage: python crawl.py -c')
+        print('usage: python crawl.py [-c filename]')
