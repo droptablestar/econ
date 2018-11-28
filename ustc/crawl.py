@@ -16,10 +16,6 @@ from pymongo.errors import DuplicateKeyError
 
 import numpy
 
-from pathos.multiprocessing import ProcessingPool as Pool
-from itertools import repeat
-# from functools import partial
-print('there')
 class Crawler:
     def __init__(self, file_name=None, domain=None, classification=None):
         r''
