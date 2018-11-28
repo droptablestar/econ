@@ -75,7 +75,7 @@ class Crawler:
             self.req_sleep()
 
     def log(self, log_name, msg):
-        with open(log_name, 'a') as f:
+        with open('errors/{}'.format(log_name), 'a') as f:
             f.write('{} {}\n'.format(strftime('%Y-%d-%m_%H:%M:%S', localtime()), msg))
 
     def req_sleep(self):
@@ -104,7 +104,6 @@ if __name__ == '__main__':
         c.crawl_all()
 
     elif len(sys.argv) == 3 and sys.argv[1] == '-c':
-        
         with open(sys.argv[2]) as f:
             lines = list(map(lambda line: line.strip(' \n'), f.readlines()))
             for i in range(0, len(lines)):  # create some threads
