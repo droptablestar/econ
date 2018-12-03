@@ -7,17 +7,18 @@ from urllib.error import HTTPError
 
 from re import findall, search
 from random import uniform
-from time import sleep, localtime, strftime
+from time import sleep
 from threading import Thread
 import sys
 
 from mongo import DB
+from utils import log
+
 from pymongo.errors import DuplicateKeyError, WriteConcernError
 import numpy
 
 class Crawler:
     def __init__(self, file_name=None, domain=None, classification=None):
-        r''
         self.file_name = file_name
         self.domain = domain
 
@@ -39,7 +40,7 @@ class Crawler:
     def crawl_all(self):
         def crawl(name, page_nos):
             for n in page_nos:
-                self.log('{}_all.log'.format(name), '{}:{}:{}'.format(name, self.collection.name, self.url.format(n)))
+                log('{}_all.log'.format(name), '{}:{}:{}'.format(name, self.collection.name, self.url.format(n)))
                 text = self.read_url(self.url.format(n))
 
                 records = findall(r'/record/[0-9]+', text)
@@ -47,7 +48,7 @@ class Crawler:
                     try:
                         self.collection.insert_one({'url': '{}{}'.format(self.domain, r)})
                     except DuplicateKeyError as e:
-                        self.log('./db_errors.log', e)
+                        log('./db_errors.log', e)
 
                 self.req_sleep()
 
@@ -66,17 +67,13 @@ class Crawler:
     def crawl_single(self, name):
         records = self.collection.find({'html': {'$exists': False}})
         for r in records:
-            self.log('{}.log'.format(name), '{}:{}:{}'.format(name, self.collection.name, r['url']))
+            log('{}.log'.format(name), '{}:{}:{}'.format(name, self.collection.name, r['url']))
             text = self.read_url(r['url'])
             try:
                 self.collection.find_one_and_update({'url': r['url']}, {'$set': {'html': text}})
             except WriteConcernError as e:
-                    self.log('./errors_single.log', 'Could not update {} - {}'.format(r['url'], e))
+                    log('./errors_single.log', 'Could not update {} - {}'.format(r['url'], e))
             self.req_sleep()
-
-    def log(self, log_name, msg):
-        with open('errors/{}'.format(log_name), 'a') as f:
-            f.write('{} {}\n'.format(strftime('%Y-%d-%m_%H:%M:%S', localtime()), msg))
 
     def req_sleep(self):
         timer = uniform(.5, 1.0)
@@ -89,7 +86,7 @@ class Crawler:
                 response = request.urlopen(url)
                 break
             except HTTPError as e:
-                self.log('./errors.log', e)
+                log('./errors.log', e)
                 self.req_sleep()
         text = response.read()
         try:
