@@ -1,6 +1,8 @@
 beautifulsoup4==4.6.3
+html5lib==1.0.1
 numpy==1.15.4
 pox==0.2.4
 ppft==1.6.4.8
 pymongo==3.7.2
 six==1.11.0
+webencodings==0.5.1
