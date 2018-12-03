@@ -11,8 +11,8 @@ class DB:
         return self.db[collection]
 
     def get_collections(self, exclude=None, system=False):
-        return filter(lambda c: c != exclude, self.db.collection_names()) if system \
-            else filter(lambda c: c != exclude, self.db.collection_names(include_system_collections=False))
+        return list(filter(lambda c: c != exclude, self.db.collection_names())) if system \
+            else list(filter(lambda c: c != exclude, self.db.collection_names(include_system_collections=False)))
 
     def count_all(self, exclude=None):
         collections = self.get_collections(exclude)

@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import re
-# import pprint
+import pprint
 
 from pymongo.errors import WriteConcernError
 
@@ -9,9 +9,9 @@ from utils import log
 
 class Parser:
     def __init__(self, classification):
-        db = DB('ustc')
+        self.db = DB('ustc')
         self.classification = classification.replace('+', '_') if classification else 'unclassified'
-        self.collection = db.get_collection(self.classification)
+        self.collection = self.db.get_collection(self.classification)
 
     def parse(self, text):
         soup = BeautifulSoup(text, features="html5lib")
@@ -65,19 +65,22 @@ class Parser:
         return [(a['href'], a.string) for a in atags]
 
     def parse_collection(self, collection):
-        print('parse')
+        pprint.pprint(collection.name)
         records = collection.find({'html': {'$exists': True}})
         for r in records:
-            log('{}.log'.format(self.collection.name), r['url'])
+            log('{}.log'.format(collection.name), r['url'])
             try:
                 parsed = self.parse(r['html'])
-                self.collection.find_one_and_update({'url': r['url']}, {'$set': parsed})
+                collection.find_one_and_update({'url': r['url']}, {'$set': parsed})
             except WriteConcernError as e:
                     self.log('./errors_single.log', 'Could not update {} - {}'.format(r['url'], e))
 
-    def parse_all_collections(self):
-        pass
+    def parse_collections(self):
+        for c in self.db.get_collections():
+            self.parse_collection(self.db.get_collection(c))
 
 if __name__ == '__main__':
     p = Parser('Book_Trade')
-    p.parse_collection(p.collection)
+    # p.parse_collection(p.collection)
+    collections = p.db.get_collections()
+    p.parse_collections()
