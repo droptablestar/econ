@@ -27,7 +27,7 @@ class Parser:
                 content = reg[2]
                 # print('label:', label)
                 # print('next:', p.find_next_sibling().name)
-                # print('content:', content)
+                # print('content:', repr(content))
                 hrefs = self.get_hrefs(p)
                 # print('hrefs:', hrefs)
                 # print('hrefs:', repr(hrefs))
@@ -62,11 +62,11 @@ class Parser:
 
     def get_hrefs(self, tag, recursive=False):
         atags = tag.find_all('a', recursive=recursive)
-        return [(a['href'], a.string) for a in atags]
+        return [(a.get('href'), a.string) for a in atags]
 
     def parse_collection(self, collection):
         pprint.pprint(collection.name)
-        records = collection.find({'html': {'$exists': True}})
+        records = collection.find({'html': {'$exists': True}, 'USTC_REFERENCE_NO': {'$exists': False}})
         for r in records:
             log('{}.log'.format(collection.name), r['url'])
             try:
