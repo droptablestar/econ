@@ -33,8 +33,9 @@ class Parser:
                 # print('hrefs:', repr(hrefs))
                 tds = []
                 # print('next:', p.find_next_sibling().name)
-                if p.find_next_sibling().name == 'table':
-                    tds = self.parse_tables(p.find_next_sibling())
+                nxt = p.find_next_sibling()
+                if nxt and nxt.name == 'table':
+                    tds = self.parse_tables(nxt)
 
                 # print('tds:', tds)
                 # print('*'*20)
