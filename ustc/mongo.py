@@ -1,11 +1,11 @@
 from pymongo import MongoClient
-import pprint
+import pprint, bson
 
 class DB:
     def __init__(self, db_name):
         with open('credentials.txt') as f:
             lines = [c.strip('\n') for c in f.readlines()]
-        
+
         client = MongoClient('127.0.0.1',
                              username=lines[0],
                              password=lines[1],
@@ -59,6 +59,20 @@ class DB:
         print(len(coll_list_set))
         diff = set(coll_uids) - coll_list_set
         return diff
+
+    # field to modify, characters to remove.
+    # ex. clean('html', '\t','\n')
+    def clean(self):
+        collections = self.get_collections()
+        for c in collections:
+            print(c)
+            self.db[c].forEach(bson.Code('''
+                function(e,i) {
+                    e.html = e.html.replace(/[\t\n\r]/g, '');
+                    db.{}.save(e);
+                }'''.format(c)))
+            return
+
 
 
 '''
