@@ -3,7 +3,14 @@ import pprint
 
 class DB:
     def __init__(self, db_name):
-        client = MongoClient()
+        with open('credentials.txt') as f:
+            lines = [c.strip('\n') for c in f.readlines()]
+        
+        client = MongoClient('127.0.0.1',
+                             username=lines[0],
+                             password=lines[1],
+                             authSource=lines[2],
+                             authMechanism='SCRAM-SHA-1')
         # print(client)
         self.db = client[db_name]
 
