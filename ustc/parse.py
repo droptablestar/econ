@@ -69,9 +69,7 @@ class Parser:
                     self.log('./errors_single.log', 'Could not update {} - {}'.format(r['url'], e))
 
     def parse_collections(self):
-        print('here')
         for c in self.db.get_collections():
-            print(c)
             self.parse_collection(self.db.get_collection(c))
 
 if __name__ == '__main__':
