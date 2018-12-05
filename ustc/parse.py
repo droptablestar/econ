@@ -30,7 +30,6 @@ class Parser:
                 elif first:
                     record[label] = []
                     first = False
-                
                 content = reg[2]
                 hrefs = self.get_hrefs(p)
                 nxt = p.find_next_sibling()
@@ -71,7 +70,7 @@ class Parser:
                 collection.find_one_and_update({'url': r['url']}, {'$set': parsed})
             except WriteConcernError as e:
                 self.log('./errors_single.log', 'Could not update {} - {}'.format(r['url'], e))
-                
+
     def parse_collections(self):
         for c in self.db.get_collections():
             self.parse_collection(self.db.get_collection(c))

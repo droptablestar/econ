@@ -69,13 +69,12 @@ class DB:
     def clean(self):
         collections = self.get_collections()
         for c in collections:
-            print(c)
-            self.db[c].forEach(bson.Code('''
-                function(e,i) {
-                    e.html = e.html.replace(/[\t\n\r]/g, '');
-                    db.{}.save(e);
-                }'''.format(c)))
-            return
+            c = 'Book_Trade'
+            for r in self.db[c].find({}):
+                print(c, r.get('url'))
+                html = r.get('html', '').replace('\t\r\n', '')
+                self.db[c].find_one_and_update({'url': r['url']}, {'$set': {'html': html}})
+                return
 
 '''
 query to replace:
