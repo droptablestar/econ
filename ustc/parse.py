@@ -8,7 +8,7 @@ from mongo import DB
 from utils import log
 
 class Parser:
-    def __init__(self, classification):
+    def __init__(self, classification=''):
         self.db = DB('ustc')
         self.classification = classification.replace('+', '_') if classification else 'unclassified'
         self.collection = self.db.get_collection(self.classification)
@@ -17,37 +17,28 @@ class Parser:
         soup = BeautifulSoup(text, features="html5lib")
         top = soup.find('div', class_='col-md-7')
         record = {}
+        labels = []
         for p in top.find_all('p'):
             if p.label:
                 label = p.text.strip(' \n\t')
-                # print('label:', repr(label))
                 reg = re.search(r'^([^\:]+)(:)(.*)', label)
                 reg = list(map(lambda g: g.strip(' \n'), reg.groups()))
                 label = reg[0].replace(' ', '_')
-                content = reg[2]
-                # print('label:', label)
-                # print('next:', p.find_next_sibling().name)
-                # print('content:', repr(content))
-                hrefs = self.get_hrefs(p)
-                # print('hrefs:', hrefs)
-                # print('hrefs:', repr(hrefs))
-                tds = []
-                # print('next:', p.find_next_sibling().name)
-                nxt = p.find_next_sibling()
-                if nxt and nxt.name == 'table':
-                    tds = self.parse_tables(nxt)
-
-                # print('tds:', tds)
-                # print('*'*20)
-                record[label] = []
-                if content:
-                    record[label].append(content)
-                if hrefs:
-                    record[label].append(hrefs)
-                if tds:
-                    record[label].extend(tds)
-
-        return record
+                if label in labels:
+                    log('duplicate_labels.txt', '{}'.format(label))
+                labels.append(label)
+                # content = reg[2]
+                # hrefs = self.get_hrefs(p)
+                # nxt = p.find_next_sibling()
+                # tds = self.parse_tables(nxt) if nxt and nxt.name == 'table' else []
+                # record[label] = []
+                # if content:
+                #     record[label].append(content)
+                # if hrefs:
+                #     record[label].append(hrefs)
+                # if tds:
+                #     record[label].extend(tds)
+        # return record
 
     def parse_tables(self, tag):
         rows = []
@@ -67,21 +58,24 @@ class Parser:
 
     def parse_collection(self, collection):
         pprint.pprint(collection.name)
-        records = collection.find({'html': {'$exists': True}, 'USTC_REFERENCE_NO': {'$exists': False}})
+        records = collection.find({'html': {'$exists': True}})
+        # records = collection.find({'html': {'$exists': True}, 'USTC_REFERENCE_NO': {'$exists': False}})
         for r in records:
             log('{}.log'.format(collection.name), r['url'])
             try:
                 parsed = self.parse(r['html'])
-                collection.find_one_and_update({'url': r['url']}, {'$set': parsed})
+                # collection.find_one_and_update({'url': r['url']}, {'$set': parsed})
             except WriteConcernError as e:
                     self.log('./errors_single.log', 'Could not update {} - {}'.format(r['url'], e))
 
     def parse_collections(self):
+        print('here')
         for c in self.db.get_collections():
+            print(c)
             self.parse_collection(self.db.get_collection(c))
 
 if __name__ == '__main__':
     p = Parser('Book_Trade')
     # p.parse_collection(p.collection)
     collections = p.db.get_collections()
-    p.parse_collections()
+    p.parse_collections(p.parse_collection)
