@@ -1,5 +1,6 @@
 from pymongo import MongoClient
-import pprint, bson
+from pymongo.errors import ConnectionFailure
+import pprint
 
 class DB:
     def __init__(self, db_name):
@@ -11,7 +12,10 @@ class DB:
                              password=lines[1],
                              authSource=lines[2],
                              authMechanism='SCRAM-SHA-1')
-        # print(client)
+        try:
+            client.admin.command('ismaster')
+        except ConnectionFailure:
+            print("Server not available")
         self.db = client[db_name]
 
     def get_collection(self, collection):
@@ -72,8 +76,6 @@ class DB:
                     db.{}.save(e);
                 }'''.format(c)))
             return
-
-
 
 '''
 query to replace:
