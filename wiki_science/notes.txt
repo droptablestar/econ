@@ -1,0 +1,4 @@
+* Choose wiki from location data.
+* Try page title as First name middle last.
+* Search by name.
+* Heuristically try to match records to info from data (e.g., year of death).
