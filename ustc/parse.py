@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import re
 import pprint
+import htmlmin
 
 from pymongo.errors import WriteConcernError
 
@@ -74,6 +75,18 @@ class Parser:
     def parse_collections(self):
         for c in self.db.get_collections():
             self.parse_collection(self.db.get_collection(c))
+
+    def minify_html(self):
+        collections = self.db.get_collections()
+        m = htmlmin.Minifier(remove_comments=True,remove_empty_space=True,\
+                             reduce_boolean_attributes=True)
+        for c in collections:
+            collection = self.db.get_collection(c)
+            log('mini.log', c)
+            for r in collection.find({}):
+                html = r.get('html', '')
+                minified = m.minify(html)
+                collection.find_one_and_update({'url': r['url']}, {'$set': {'html': minified}})
 
 if __name__ == '__main__':
     p = Parser('Book_Trade')
