@@ -1,0 +1,50 @@
+MongoDB shell version v3.6.9
+connecting to: mongodb://127.0.0.1:27017/ustc
+Implicit session: session { "id" : UUID("b90f749c-c25d-4a57-b95d-7355fcdeefd5") }
+MongoDB server version: 3.6.9
+Variety: A MongoDB Schema Analyzer
+Version 1.5.1, released 02 October 2017
+Using collection of "Games_and_Recreations"
+Using query of { }
+Using limit of 236
+Using maxDepth of 99
+Using sort of { "_id" : -1 }
+Using outputFormat of "ascii"
+Using persistResults of false
+Using resultsDatabase of "varietyResults"
+Using resultsCollection of "Games_and_RecreationsKeys"
+Using resultsUser of null
+Using resultsPass of null
+Using logKeysContinuously of false
+Using excludeSubkeys of [ ]
+Using arrayEscape of "XX"
+Using lastValue of false
+Using plugins of [ ]
++---------------------------------------------------------------------------+
+| key                        | types    | occurrences | percents            |
+| -------------------------- | -------- | ----------- | ------------------- |
+| CITATION                   | Array    |         236 | 100.000000000000000 |
+| DATE                       | Array    |         236 | 100.000000000000000 |
+| IMPRINT                    | Array    |         236 | 100.000000000000000 |
+| PLACE                      | Array    |         236 | 100.000000000000000 |
+| SHORT_TITLE                | Array    |         236 | 100.000000000000000 |
+| USTC_REFERENCE_NO          | Array    |         236 | 100.000000000000000 |
+| _id                        | ObjectId |         236 | 100.000000000000000 |
+| html                       | String   |         236 | 100.000000000000000 |
+| url                        | String   |         236 | 100.000000000000000 |
+| FORMAT                     | Array    |         224 |  94.915254237288138 |
+| LIBRARY_COPIES             | Array    |         224 |  94.915254237288138 |
+| PP/FF                      | Array    |         163 |  69.067796610169495 |
+| PRIMARY_AUTHOR             | Array    |         147 |  62.288135593220339 |
+| HEADING                    | Array    |          69 |  29.237288135593221 |
+| SIGNATURES                 | Array    |          62 |  26.271186440677965 |
+| DIGITAL_COPY_AVAILABLE_VIA | Array    |          46 |  19.491525423728813 |
+| REFERENCES                 | Array    |          46 |  19.491525423728813 |
+| LOC                        | Array    |          41 |  17.372881355932204 |
+| TITLE_PAGE                 | Array    |          31 |  13.135593220338983 |
+| TRANSLATOR                 | Array    |          20 |   8.474576271186441 |
+| SECONDARY_AUTHOR           | Array    |          14 |   5.932203389830509 |
+| COLOPHON                   | Array    |           8 |   3.389830508474576 |
+| STCN                       | Array    |           8 |   3.389830508474576 |
+| EDITOR                     | Array    |           2 |   0.847457627118644 |
++---------------------------------------------------------------------------+

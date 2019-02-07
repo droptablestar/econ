@@ -1,0 +1,48 @@
+MongoDB shell version v3.6.9
+connecting to: mongodb://127.0.0.1:27017/ustc
+Implicit session: session { "id" : UUID("5b30eea0-2587-49bb-8986-08ebb56acf7f") }
+MongoDB server version: 3.6.9
+Variety: A MongoDB Schema Analyzer
+Version 1.5.1, released 02 October 2017
+Using collection of "Etiquette_and_Courtesy"
+Using query of { }
+Using limit of 590
+Using maxDepth of 99
+Using sort of { "_id" : -1 }
+Using outputFormat of "ascii"
+Using persistResults of false
+Using resultsDatabase of "varietyResults"
+Using resultsCollection of "Etiquette_and_CourtesyKeys"
+Using resultsUser of null
+Using resultsPass of null
+Using logKeysContinuously of false
+Using excludeSubkeys of [ ]
+Using arrayEscape of "XX"
+Using lastValue of false
+Using plugins of [ ]
++----------------------------------------------------------------------------+
+| key                        | types    | occurrences | percents             |
+| -------------------------- | -------- | ----------- | -------------------- |
+| CITATION                   | Array    |         590 | 100.0000000000000000 |
+| DATE                       | Array    |         590 | 100.0000000000000000 |
+| IMPRINT                    | Array    |         590 | 100.0000000000000000 |
+| PLACE                      | Array    |         590 | 100.0000000000000000 |
+| SHORT_TITLE                | Array    |         590 | 100.0000000000000000 |
+| USTC_REFERENCE_NO          | Array    |         590 | 100.0000000000000000 |
+| _id                        | ObjectId |         590 | 100.0000000000000000 |
+| html                       | String   |         590 | 100.0000000000000000 |
+| url                        | String   |         590 | 100.0000000000000000 |
+| FORMAT                     | Array    |         570 |  96.6101694915254257 |
+| LIBRARY_COPIES             | Array    |         535 |  90.6779661016949206 |
+| PP/FF                      | Array    |         525 |  88.9830508474576334 |
+| PRIMARY_AUTHOR             | Array    |         424 |  71.8644067796610102 |
+| LOC                        | Array    |         328 |  55.5932203389830519 |
+| DIGITAL_COPY_AVAILABLE_VIA | Array    |          89 |  15.0847457627118651 |
+| HEADING                    | Array    |          88 |  14.9152542372881349 |
+| SIGNATURES                 | Array    |          60 |  10.1694915254237284 |
+| REFERENCES                 | Array    |          38 |   6.4406779661016946 |
+| TRANSLATOR                 | Array    |          23 |   3.8983050847457625 |
+| SECONDARY_AUTHOR           | Array    |          15 |   2.5423728813559321 |
+| STCN                       | Array    |           9 |   1.5254237288135593 |
+| EDITOR                     | Array    |           1 |   0.1694915254237288 |
++----------------------------------------------------------------------------+

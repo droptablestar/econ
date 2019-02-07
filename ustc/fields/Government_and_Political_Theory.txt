@@ -1,0 +1,50 @@
+MongoDB shell version v3.6.9
+connecting to: mongodb://127.0.0.1:27017/ustc
+Implicit session: session { "id" : UUID("0ff9643d-e0f0-4998-be03-825d3f622131") }
+MongoDB server version: 3.6.9
+Variety: A MongoDB Schema Analyzer
+Version 1.5.1, released 02 October 2017
+Using collection of "Government_and_Political_Theory"
+Using query of { }
+Using limit of 2981
+Using maxDepth of 99
+Using sort of { "_id" : -1 }
+Using outputFormat of "ascii"
+Using persistResults of false
+Using resultsDatabase of "varietyResults"
+Using resultsCollection of "Government_and_Political_TheoryKeys"
+Using resultsUser of null
+Using resultsPass of null
+Using logKeysContinuously of false
+Using excludeSubkeys of [ ]
+Using arrayEscape of "XX"
+Using lastValue of false
+Using plugins of [ ]
++---------------------------------------------------------------------------+
+| key                        | types    | occurrences | percents            |
+| -------------------------- | -------- | ----------- | ------------------- |
+| CITATION                   | Array    |        2981 | 100.000000000000000 |
+| DATE                       | Array    |        2981 | 100.000000000000000 |
+| IMPRINT                    | Array    |        2981 | 100.000000000000000 |
+| PLACE                      | Array    |        2981 | 100.000000000000000 |
+| SHORT_TITLE                | Array    |        2981 | 100.000000000000000 |
+| USTC_REFERENCE_NO          | Array    |        2981 | 100.000000000000000 |
+| _id                        | ObjectId |        2981 | 100.000000000000000 |
+| html                       | String   |        2981 | 100.000000000000000 |
+| url                        | String   |        2981 | 100.000000000000000 |
+| FORMAT                     | Array    |        2836 |  95.135860449513586 |
+| LIBRARY_COPIES             | Array    |        2804 |  94.062395169406244 |
+| PP/FF                      | Array    |        2497 |  83.763837638376387 |
+| PRIMARY_AUTHOR             | Array    |        2419 |  81.147266018114721 |
+| LOC                        | Array    |        1107 |  37.135189533713522 |
+| SIGNATURES                 | Array    |         785 |  26.333445152633345 |
+| REFERENCES                 | Array    |         670 |  22.475679302247567 |
+| DIGITAL_COPY_AVAILABLE_VIA | Array    |         525 |  17.611539751761153 |
+| TITLE_PAGE                 | Array    |         518 |  17.376719221737673 |
+| STCN                       | Array    |         291 |   9.761824890976182 |
+| TRANSLATOR                 | Array    |         244 |   8.185172760818517 |
+| SECONDARY_AUTHOR           | Array    |         179 |   6.004696410600469 |
+| COLOPHON                   | Array    |         148 |   4.964776920496478 |
+| EDITOR                     | Array    |          99 |   3.321033210332103 |
+| HEADING                    | Array    |          78 |   2.616571620261657 |
++---------------------------------------------------------------------------+

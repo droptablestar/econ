@@ -1,0 +1,50 @@
+MongoDB shell version v3.6.9
+connecting to: mongodb://127.0.0.1:27017/ustc
+Implicit session: session { "id" : UUID("c11fbab1-ce0d-4262-bda8-3bfd11d69513") }
+MongoDB server version: 3.6.9
+Variety: A MongoDB Schema Analyzer
+Version 1.5.1, released 02 October 2017
+Using collection of "Culinary_Arts"
+Using query of { }
+Using limit of 525
+Using maxDepth of 99
+Using sort of { "_id" : -1 }
+Using outputFormat of "ascii"
+Using persistResults of false
+Using resultsDatabase of "varietyResults"
+Using resultsCollection of "Culinary_ArtsKeys"
+Using resultsUser of null
+Using resultsPass of null
+Using logKeysContinuously of false
+Using excludeSubkeys of [ ]
+Using arrayEscape of "XX"
+Using lastValue of false
+Using plugins of [ ]
++----------------------------------------------------------------------------+
+| key                        | types    | occurrences | percents             |
+| -------------------------- | -------- | ----------- | -------------------- |
+| CITATION                   | Array    |         525 | 100.0000000000000000 |
+| DATE                       | Array    |         525 | 100.0000000000000000 |
+| IMPRINT                    | Array    |         525 | 100.0000000000000000 |
+| PLACE                      | Array    |         525 | 100.0000000000000000 |
+| SHORT_TITLE                | Array    |         525 | 100.0000000000000000 |
+| USTC_REFERENCE_NO          | Array    |         525 | 100.0000000000000000 |
+| _id                        | ObjectId |         525 | 100.0000000000000000 |
+| html                       | String   |         525 | 100.0000000000000000 |
+| url                        | String   |         525 | 100.0000000000000000 |
+| FORMAT                     | Array    |         505 |  96.1904761904761898 |
+| LIBRARY_COPIES             | Array    |         462 |  88.0000000000000000 |
+| PP/FF                      | Array    |         457 |  87.0476190476190510 |
+| PRIMARY_AUTHOR             | Array    |         351 |  66.8571428571428612 |
+| DIGITAL_COPY_AVAILABLE_VIA | Array    |         167 |  31.8095238095238102 |
+| SIGNATURES                 | Array    |         153 |  29.1428571428571423 |
+| HEADING                    | Array    |         121 |  23.0476190476190474 |
+| LOC                        | Array    |          74 |  14.0952380952380949 |
+| REFERENCES                 | Array    |          66 |  12.5714285714285712 |
+| TITLE_PAGE                 | Array    |          46 |   8.7619047619047628 |
+| SECONDARY_AUTHOR           | Array    |          45 |   8.5714285714285712 |
+| TRANSLATOR                 | Array    |          43 |   8.1904761904761898 |
+| COLOPHON                   | Array    |          15 |   2.8571428571428572 |
+| EDITOR                     | Array    |          13 |   2.4761904761904763 |
+| STCN                       | Array    |          10 |   1.9047619047619047 |
++----------------------------------------------------------------------------+

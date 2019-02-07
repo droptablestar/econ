@@ -1,0 +1,50 @@
+MongoDB shell version v3.6.9
+connecting to: mongodb://127.0.0.1:27017/ustc
+Implicit session: session { "id" : UUID("2b6302da-d7fd-4378-b80a-6a2f1e6bd2d2") }
+MongoDB server version: 3.6.9
+Variety: A MongoDB Schema Analyzer
+Version 1.5.1, released 02 October 2017
+Using collection of "Literature"
+Using query of { }
+Using limit of 19402
+Using maxDepth of 99
+Using sort of { "_id" : -1 }
+Using outputFormat of "ascii"
+Using persistResults of false
+Using resultsDatabase of "varietyResults"
+Using resultsCollection of "LiteratureKeys"
+Using resultsUser of null
+Using resultsPass of null
+Using logKeysContinuously of false
+Using excludeSubkeys of [ ]
+Using arrayEscape of "XX"
+Using lastValue of false
+Using plugins of [ ]
++----------------------------------------------------------------------------+
+| key                        | types    | occurrences | percents             |
+| -------------------------- | -------- | ----------- | -------------------- |
+| CITATION                   | Array    |       19402 | 100.0000000000000000 |
+| DATE                       | Array    |       19402 | 100.0000000000000000 |
+| IMPRINT                    | Array    |       19402 | 100.0000000000000000 |
+| PLACE                      | Array    |       19402 | 100.0000000000000000 |
+| SHORT_TITLE                | Array    |       19402 | 100.0000000000000000 |
+| USTC_REFERENCE_NO          | Array    |       19402 | 100.0000000000000000 |
+| _id                        | ObjectId |       19402 | 100.0000000000000000 |
+| html                       | String   |       19402 | 100.0000000000000000 |
+| url                        | String   |       19402 | 100.0000000000000000 |
+| LIBRARY_COPIES             | Array    |       18336 |  94.5057210596845749 |
+| FORMAT                     | Array    |       18315 |  94.3974847953819136 |
+| PRIMARY_AUTHOR             | Array    |       16164 |  83.3109988660962841 |
+| PP/FF                      | Array    |       16016 |  82.5481909081537992 |
+| LOC                        | Array    |        6484 |  33.4192351303989312 |
+| REFERENCES                 | Array    |        4869 |  25.0953509947428088 |
+| SIGNATURES                 | Array    |        4447 |  22.9203174930419529 |
+| TITLE_PAGE                 | Array    |        2777 |  14.3129574270693745 |
+| DIGITAL_COPY_AVAILABLE_VIA | Array    |        2619 |  13.4986083908875365 |
+| TRANSLATOR                 | Array    |        1611 |   8.3032677043603744 |
+| HEADING                    | Array    |        1576 |   8.1228739305226263 |
+| SECONDARY_AUTHOR           | Array    |        1419 |   7.3136790021647249 |
+| COLOPHON                   | Array    |        1040 |   5.3602721368931041 |
+| STCN                       | Array    |        1008 |   5.1953406865271621 |
+| EDITOR                     | Array    |         397 |   2.0461808061024636 |
++----------------------------------------------------------------------------+

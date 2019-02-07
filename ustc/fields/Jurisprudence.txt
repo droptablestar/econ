@@ -1,0 +1,50 @@
+MongoDB shell version v3.6.9
+connecting to: mongodb://127.0.0.1:27017/ustc
+Implicit session: session { "id" : UUID("fa053295-c27c-4132-8ccb-b2c43e942ecf") }
+MongoDB server version: 3.6.9
+Variety: A MongoDB Schema Analyzer
+Version 1.5.1, released 02 October 2017
+Using collection of "Jurisprudence"
+Using query of { }
+Using limit of 45896
+Using maxDepth of 99
+Using sort of { "_id" : -1 }
+Using outputFormat of "ascii"
+Using persistResults of false
+Using resultsDatabase of "varietyResults"
+Using resultsCollection of "JurisprudenceKeys"
+Using resultsUser of null
+Using resultsPass of null
+Using logKeysContinuously of false
+Using excludeSubkeys of [ ]
+Using arrayEscape of "XX"
+Using lastValue of false
+Using plugins of [ ]
++----------------------------------------------------------------------------+
+| key                        | types    | occurrences | percents             |
+| -------------------------- | -------- | ----------- | -------------------- |
+| CITATION                   | Array    |       45896 | 100.0000000000000000 |
+| DATE                       | Array    |       45896 | 100.0000000000000000 |
+| IMPRINT                    | Array    |       45896 | 100.0000000000000000 |
+| PLACE                      | Array    |       45896 | 100.0000000000000000 |
+| SHORT_TITLE                | Array    |       45896 | 100.0000000000000000 |
+| USTC_REFERENCE_NO          | Array    |       45896 | 100.0000000000000000 |
+| _id                        | ObjectId |       45896 | 100.0000000000000000 |
+| html                       | String   |       45896 | 100.0000000000000000 |
+| url                        | String   |       45896 | 100.0000000000000000 |
+| FORMAT                     | Array    |       43749 |  95.3220324211260248 |
+| LIBRARY_COPIES             | Array    |       43173 |  94.0670210911626299 |
+| PP/FF                      | Array    |       37521 |  81.7522224158968100 |
+| PRIMARY_AUTHOR             | Array    |       26895 |  58.5998779850095843 |
+| HEADING                    | Array    |       16576 |  36.1164371622799365 |
+| REFERENCES                 | Array    |       13434 |  29.2705246644587760 |
+| SECONDARY_AUTHOR           | Array    |       12631 |  27.5209168554993902 |
+| LOC                        | Array    |       12227 |  26.6406658532333971 |
+| SIGNATURES                 | Array    |        7090 |  15.4479693219452674 |
+| DIGITAL_COPY_AVAILABLE_VIA | Array    |        6686 |  14.5677183196792743 |
+| TITLE_PAGE                 | Array    |        1733 |   3.7759281854627855 |
+| EDITOR                     | Array    |        1416 |   3.0852361861600142 |
+| STCN                       | Array    |        1364 |   2.9719365522049852 |
+| COLOPHON                   | Array    |         496 |   1.0807042008018128 |
+| TRANSLATOR                 | Array    |         154 |   0.3355412236360467 |
++----------------------------------------------------------------------------+
