@@ -78,7 +78,7 @@ class Parser:
 
     def minify_html(self):
         collections = self.db.get_collections()
-        m = htmlmin.Minifier(remove_comments=True,remove_empty_space=True,\
+        m = htmlmin.Minifier(remove_comments=True, remove_empty_space=True,
                              reduce_boolean_attributes=True)
         for c in collections:
             collection = self.db.get_collection(c)
