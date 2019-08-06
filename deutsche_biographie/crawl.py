@@ -91,8 +91,6 @@ class Crawler:
             except WriteConcernError as e:
                 log("./errors_pages.log", f"Could not update {doc['uid']} - {e}")
 
-            exit()
-
     def get_charset(self, soup):
         metas = soup.head.find_all("meta")
         if metas:
