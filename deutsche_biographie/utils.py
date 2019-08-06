@@ -9,5 +9,5 @@ def log(log_name, msg):
 
 
 def req_sleep():
-    timer = uniform(1.0, 2.0)
+    timer = uniform(1.5, 2.5)
     sleep(timer)

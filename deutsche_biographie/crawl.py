@@ -17,9 +17,10 @@ default_encoding = "utf-8"
 
 
 class Crawler:
-    def __init__(self, count, url):
+    def __init__(self, start, count, url):
         self.count = count
         self.url = url
+        self.start = start
         db = DB("biblio")
 
         self.collection = db.get_collection("records")
@@ -30,7 +31,7 @@ class Crawler:
     def crawl(self):
         pages = self.count // 10
 
-        for p in range(0, pages):
+        for p in range(self.start, pages+1):
             log("log.log", url.format(p))
             tries = 10
             while tries > 0:
@@ -51,7 +52,7 @@ class Crawler:
                 log("errors", f"PAGE {p} has less than 10 records")
 
             for h in headings:
-                try:
+                try: 
                     uid = h.a["href"].strip(".html#nbdcontent")
                 except Exception:
                     log("errors", "HEADING {h} doesn't have an a tag")
@@ -70,6 +71,7 @@ class Crawler:
 
 
 if __name__ == "__main__":
-    url = "https://www.deutsche-biographie.de/search?_csrf=555737a2-d98d-406c-a5b7-eb6bde352980&name=&freitext=&gdr=&konf=&beruf=&bk=&geburtsjahr=1000-2000&todesjahr=&ortArt=geb&ort=&belOrt=&ai=&autor=&gnd=&st=erw&facets=&cf=&number=0&ot=&sl=%5B%5D&sort="
-    crawler = Crawler(493403, url)
+    log("log.log", f"************* --------- :RESET: **************** ------- 1720")
+    url = "https://www.deutsche-biographie.de/search?_csrf=555737a2-d98d-406c-a5b7-eb6bde352980&name=&freitext=&gdr=&konf=&beruf=&bk=&geburtsjahr=1000-2000&todesjahr=&ortArt=geb&ort=&belOrt=&ai=&autor=&gnd=&st=erw&facets=&cf=&number={}&ot=&sl=%5B%5D&sort="
+    crawler = Crawler(49339, 493403, url)
     crawler.crawl()
