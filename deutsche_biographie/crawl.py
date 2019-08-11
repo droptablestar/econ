@@ -1,14 +1,15 @@
-import requests
 import htmlmin
+import threading
+import queue
+import time
+
 from bs4 import BeautifulSoup
 from mongo import DB
 from pymongo.errors import DuplicateKeyError, WriteConcernError
 
+from utils import log, req_sleep, make_request
 
-from utils import log, req_sleep
 
-
-INDEX_URL = "https://www.deutsche-biographie.de/{}.html#indexcontent"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36",
     "authority": "www.deutsche-biographie.de",
@@ -17,36 +18,39 @@ HEADERS = {
 
 default_encoding = "utf-8"
 
+BUF_SIZE = 1000
 
-class Crawler:
-    def __init__(self, count, url):
+q = queue.Queue(BUF_SIZE)
+
+class IDCrawler(threading.Thread):
+    def __init__(self, count, group=None, target=None, name=None,
+                 args=(), kwargs=None, verbose=None):
+        super().__init__()
+
+        self.url = "https://www.deutsche-biographie.de/search?_csrf=555737a2-d98d-406c-a5b7-eb6bde352980&name=&freitext=&gdr=&konf=&beruf=&bk=&geburtsjahr=1000-2000&todesjahr=&ortArt=geb&ort=&belOrt=&ai=&autor=&gnd=&st=erw&facets=&cf=&number={}&ot=&sl=%5B%5D&sort="
         self.count = count
-        self.url = url
-        db = DB("biblio")
+        self.name = name
 
+        db = DB("biblio")
         self.collection = db.get_collection("records")
+
         if "uid" not in self.collection.index_information().keys():
             # if we're here it means we already created the unique index
             self.collection.create_index("uid", unique=True)
 
-    def crawl_ids(self):
+    def run(self):
         pages = self.count // 10
 
         for p in range(0, pages):
-            log("log.log", url.format(p))
-            tries = 10
-            while tries > 0:
-                response = requests.get(url.format(p), headers=HEADERS, verify=False)
-                if response:
-                    req_sleep()
-                    break
-                else:
-                    tries -= 1
-                    req_sleep()
-            if tries == 0:
-                continue
+            log("log.log", self.url.format(p))
+            response = make_request(self.url.format(p), HEADERS, verify=False)
 
+            if not response:
+                continue
+            
+            log("log.log", "parsing resonse")
             soup = BeautifulSoup(response.text, "html.parser")
+            response.close()
             headings = soup.find_all("h4", "media-heading")
 
             if len(headings) < 10:
@@ -56,51 +60,68 @@ class Crawler:
                 try:
                     uid = h.a["href"].strip(".html#nbdcontent")
                 except Exception:
-                    log("errors", "HEADING {h} doesn't have an a tag")
+                    log("parse_errors", "HEADING {h} doesn't have an a tag")
                     continue
+                
                 try:
-                    self.collection.insert_one({"uid": uid})
-                except DuplicateKeyError as e:
-                    log("db_errors.log", e)
+                    self.collection.find_one_and_update(
+                        {"uid": uid}, {"$set": {"page": p}}
+                    )
+                except WriteConcernError as e:
+                    log("db_errors_ids.log", f"Could not update {uid} - {e}")
 
-    def crawl_pages(self):
-        documents = self.collection.find({"html": {"$exists": False}})
-        for doc in documents:
-            url = f"https://www.deutsche-biographie.de/{doc['uid']}.html#indexcontent"
-            log("pages_log.log", url)
+                # try:
+                #     self.collection.insert_one({"uid": uid})
+                # except DuplicateKeyError as e:
+                #     log("db_errors.log", e)
 
-            tries = 10
-            while tries > 0:
-                response = requests.get(url, headers=HEADERS, verify=False)
-                if response:
-                    req_sleep()
-                    break
-                else:
-                    print(response)
-                    tries -= 1
-                    req_sleep()
-            if tries == 0:
-                continue
-            else:
-                log("pages_error.log", f"max retries - {doc['uid']}")
-            html = htmlmin.minify(response.text)
-            try:
-                self.collection.find_one_and_update(
-                    {"uid": doc["uid"]}, {"$set": {"html": html}}
-                )
-            except WriteConcernError as e:
-                log("./errors_pages.log", f"Could not update {doc['uid']} - {e}")
+                if self.collection.count_documents({"uid": "fjdksl", "html": {"$eq": None}}) > 0:
+                    log("id_to_page.log", uid)
+                    q.put(uid)
 
-    def get_charset(self, soup):
-        metas = soup.head.find_all("meta")
-        if metas:
-            for m in metas:
-                if m.has_attr("charset"):
-                    return m["charset"]
+        log("thread.log", "IDCrawler STOPPED")
+        
+
+class PageCrawler(threading.Thread):
+    def __init__(self, count, group=None, target=None, name=None,
+                 args=(), kwargs=None, verbose=None):
+        super().__init__()
+        self.name = name
+
+        db = DB("biblio")
+        self.collection = db.get_collection("records")
+        
+    def run(self):
+        while True and len(threading.enumerate()) > 2:
+            if not q.empty():
+                uid = q.get()
+                url = f"https://www.deutsche-biographie.de/{uid}.html#indexcontent"
+
+                log("pages_log.log", url)
+
+                response = make_request(url, HEADERS, verify=False)
+
+                if not response:
+                    continue
+
+                log("pages_log.log", "parsing response")
+                html = htmlmin.minify(response.text)
+                response.close()
+
+                try:
+                    self.collection.find_one_and_update(
+                        {"uid": uid}, {"$set": {"html": html}}
+                    )
+                except WriteConcernError as e:
+                    log("db_errors_pages.log", f"Could not update {uid} - {e}")
+        
+        log("thread.log", "PageCraweler STOPPED")
 
 
 if __name__ == "__main__":
-    url = "https://www.deutsche-biographie.de/search?_csrf=555737a2-d98d-406c-a5b7-eb6bde352980&name=&freitext=&gdr=&konf=&beruf=&bk=&geburtsjahr=1000-2000&todesjahr=&ortArt=geb&ort=&belOrt=&ai=&autor=&gnd=&st=erw&facets=&cf=&number=0&ot=&sl=%5B%5D&sort="
-    crawler = Crawler(493403, url)
-    # crawler.crawl_ids()
-    crawler.crawl_pages()
+    id_crawler = IDCrawler(493403, name="IDCrawler")
+    page_crawler = PageCrawler(0, name="PageCrawler")
+
+    id_crawler.start()
+    time.sleep(5)
+    page_crawler.start()
