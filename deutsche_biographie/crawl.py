@@ -30,6 +30,7 @@ class IDCrawler(threading.Thread):
         self.url = "https://www.deutsche-biographie.de/search?_csrf=555737a2-d98d-406c-a5b7-eb6bde352980&name=&freitext=&gdr=&konf=&beruf=&bk=&geburtsjahr=1000-2000&todesjahr=&ortArt=geb&ort=&belOrt=&ai=&autor=&gnd=&st=erw&facets=&cf=&number={}&ot=&sl=%5B%5D&sort="
         self.count = count
         self.name = name
+        self._start = 4634
 
         db = DB("biblio")
         self.collection = db.get_collection("records")
@@ -41,14 +42,13 @@ class IDCrawler(threading.Thread):
     def run(self):
         pages = self.count // 10
 
-        for p in range(0, pages):
+        for p in range(self._start, pages):
             log("log.log", self.url.format(p))
             response = make_request(self.url.format(p), HEADERS, verify=False)
 
             if not response:
                 continue
             
-            log("log.log", "parsing resonse")
             soup = BeautifulSoup(response.text, "html.parser")
             response.close()
             headings = soup.find_all("h4", "media-heading")
@@ -75,7 +75,7 @@ class IDCrawler(threading.Thread):
                 # except DuplicateKeyError as e:
                 #     log("db_errors.log", e)
 
-                if self.collection.count_documents({"uid": "fjdksl", "html": {"$eq": None}}) > 0:
+                if self.collection.count_documents({"uid": uid, "html": {"$eq": None}}) > 0:
                     log("id_to_page.log", uid)
                     q.put(uid)
 
@@ -83,7 +83,7 @@ class IDCrawler(threading.Thread):
         
 
 class PageCrawler(threading.Thread):
-    def __init__(self, count, group=None, target=None, name=None,
+    def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None, verbose=None):
         super().__init__()
         self.name = name
@@ -92,7 +92,7 @@ class PageCrawler(threading.Thread):
         self.collection = db.get_collection("records")
         
     def run(self):
-        while True and len(threading.enumerate()) > 2:
+        while True and "IDCrawler" in [t.name for t in threading.enumerate()]:
             if not q.empty():
                 uid = q.get()
                 url = f"https://www.deutsche-biographie.de/{uid}.html#indexcontent"
@@ -104,7 +104,6 @@ class PageCrawler(threading.Thread):
                 if not response:
                     continue
 
-                log("pages_log.log", "parsing response")
                 html = htmlmin.minify(response.text)
                 response.close()
 
@@ -120,7 +119,7 @@ class PageCrawler(threading.Thread):
 
 if __name__ == "__main__":
     id_crawler = IDCrawler(493403, name="IDCrawler")
-    page_crawler = PageCrawler(0, name="PageCrawler")
+    page_crawler = PageCrawler(name="PageCrawler")
 
     id_crawler.start()
     time.sleep(5)

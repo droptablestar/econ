@@ -16,7 +16,7 @@ def req_sleep():
 
 
 def make_request(url, headers, verify=True):
-    tries = 10
+    tries = 1
     while tries > 0:
         response = requests.get(url, headers=headers, verify=verify)
         if response:
