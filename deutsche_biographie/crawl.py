@@ -30,7 +30,7 @@ class IDCrawler(threading.Thread):
         self.url = "https://www.deutsche-biographie.de/search?_csrf=555737a2-d98d-406c-a5b7-eb6bde352980&name=&freitext=&gdr=&konf=&beruf=&bk=&geburtsjahr=1000-2000&todesjahr=&ortArt=geb&ort=&belOrt=&ai=&autor=&gnd=&st=erw&facets=&cf=&number={}&ot=&sl=%5B%5D&sort="
         self.count = count
         self.name = name
-        self._start = 4634
+        self._start = 24811        
 
         db = DB("biblio")
         self.collection = db.get_collection("records")
@@ -123,4 +123,7 @@ if __name__ == "__main__":
 
     id_crawler.start()
     time.sleep(5)
-    page_crawler.start()
+    try:
+        page_crawler.start()
+    except:
+        log("thread.log", "PageCrawler Exception")
