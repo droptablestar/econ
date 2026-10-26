@@ -2,7 +2,7 @@ appdirs==1.4.3
 astroid==2.2.5
 attrs==19.1.0
 beautifulsoup4==4.8.0
-black==19.3b0
+black==26.10.1
 certifi==2022.12.7
 chardet==3.0.4
 Click==7.0
